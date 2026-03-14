@@ -1,9 +1,41 @@
+<!-- TOC -->
+* [基于软件的双APP冷签方案](#基于软件的双app冷签方案)
+  * [项目文档 (Documentation)](#项目文档-documentation)
+  * [Isolated Offline Signer (IOS)](#isolated-offline-signer-ios)
+  * [Architecture](#architecture)
+    * [Workflow](#workflow)
+    * [Feature](#feature)
+    * [被限制的能力](#被限制的能力)
+  * [App name](#app-name)
+  * [Between Hardware Wallet](#between-hardware-wallet)
+    * [Difference between Hardware Wallet](#difference-between-hardware-wallet)
+    * [弱势](#弱势)
+    * [优势](#优势)
+  * [Between single App software Wallet](#between-single-app-software-wallet)
+    * [优势](#优势-1)
+  * [Offline Wallet Supported Platforms:](#offline-wallet-supported-platforms)
+  * [Inter-App Communication（IAC）](#inter-app-communicationiac)
+<!-- TOC -->
+
 # 基于软件的双APP冷签方案
 
 双APP指：
 
 * DApps
 * Signer
+
+## 项目文档 (Documentation)
+
+详细的设计方案与理论依据请参阅以下文档：
+
+* **核心架构与演进**
+    * [Wallet Architecture Evolution](doc/Wallet%20Architecture%20Evolution-zh.md) ([中文版](doc/Wallet%20Architecture%20Evolution-zh.md))
+    * [Wallet Type & Comparison](doc/Wallet%20Type.md)
+* **安全模型**
+    * [Security Model](doc/Security%20Model.md) ([中文版](doc/Security%20Model-zh.md))
+    * [Safety & Audit Considerations](doc/for%20safty-autiy.md)
+* **其他**
+    * [Terminologies / Word List](doc/word.md)
 
 ## Isolated Offline Signer (IOS)
 
@@ -12,7 +44,7 @@ A Software-based Out-of-Band Transaction Signing Architecture
 
 ## Architecture
 
-![Arch](image/arch.png "DApps Call Signer")
+![Arch](doc/image/arch.png "DApps Call Signer")
 
 ### Workflow
 
@@ -72,23 +104,21 @@ Signer 实际上是：
 
 * 使用、普及方便，无需单独物理设备保存私钥
 
-## Difference between single App software Wallet
+## Between single App software Wallet
 
 ### 优势
 
 * 双App，用户易于理解私钥与应用层在不同的App，明确私钥是隔离的
 * 用户可明确确认Signer未联网
 
-### Offline Wallet Supported Platforms:
+## Offline Wallet Supported Platforms:
 
 * Mobile
 * Web
 * Desktop
 
-#### Inter-App Communication（IAC）
+## Inter-App Communication（IAC）
 
 * OS App IPC: (Android: Intent, IOS: Universal Link ...)
 * Bluetooth
 * Qrcode
-
-
