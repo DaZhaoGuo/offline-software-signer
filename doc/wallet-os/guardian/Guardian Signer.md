@@ -39,35 +39,48 @@
 ```
 
 ```mermaid
-stateDiagram
-    [*] --> RequestCreated
+flowchart LR
 
-    state RequestCreated {
-        note right: 客户端生成新 signer\n发起 RecoveryRequest
-        Client_Generated: RecoveryRequest 创建
-    }
+%% ===== Actors =====
+Client[Client<br>新设备]
+Server[Server<br>Recovery Service]
+Friend[Friend Guardian]
+Device[Device Guardian]
+Service[Service Guardian]
 
-    RequestCreated --> WaitingForSignatures
-    state WaitingForSignatures {
-        note right: 服务端通知 Guardian\nGuardian 验证并签名
-        Friend_Signed: Friend Guardian 签名
-        Device_Signed: Device Guardian 签名
-        Service_Signed: Service Guardian 签名
-    }
+%% ===== States =====
+subgraph Recovery_State
+S1[Request Created]
+S2[Waiting For Signatures]
+S3[Partial Signatures]
+S4[Threshold Met]
+S5[Recovery Completed]
+end
 
-    WaitingForSignatures --> ThresholdMet : 阈值签名满足
-    WaitingForSignatures --> WaitingForSignatures : 新 Guardian 签名加入但未达阈值
+%% ===== Flow =====
 
-    state ThresholdMet {
-        note right: 服务端聚合签名\n返回批准结果
-        Client_Activate: 客户端激活新 signer
-        Client_Deactivate: 废弃旧 signer
-    }
+Client -->|1 Generate New Signer| S1
 
-    ThresholdMet --> Completed
-    state Completed {
-        note right: 恢复完成\n可选时间锁 / 通知机制
-    }
+S1 -->|2 Send RecoveryRequest| Server
 
-    Completed --> [*]
+Server -->|3 Notify Guardian| Friend
+Server -->|3 Notify Guardian| Device
+Server -->|3 Notify Guardian| Service
+
+Friend -->|4 Sign RecoveryRequest| Server
+Device -->|4 Sign RecoveryRequest| Server
+Service -->|4 Sign RecoveryRequest| Server
+
+Server --> S2
+
+S2 -->|Receive First Signature| S3
+S3 -->|More Signatures Arrive| S3
+
+S3 -->|Signatures ≥ Threshold| S4
+
+S4 -->|Approve Recovery| Client
+
+Client -->|Activate New Signer| S5
+Client -->|Revoke Old Signer| S5
+```
 ```
